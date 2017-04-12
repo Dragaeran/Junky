@@ -1,1 +1,1 @@
-web: node discord-bot.js PORT=5000
+web: node discord-bot.js PORT=$PORT
