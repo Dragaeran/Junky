@@ -1,1 +1,1 @@
-web: node discord-bot.js
+web: node discord-bot.js -p $PORT
