@@ -53,7 +53,13 @@ function sendRandomMadame(bm) {
         let $ = cheerio.load(body);
         $body = $('body')
         $image = $body.find('.has_imageurl');
-        console.log($image)
+
+        $image.each(function (i, item) {
+            let attribs = item.attribs
+            console.log(attribs['data-imageurl'])
+        })
+
+
 
     })
 
