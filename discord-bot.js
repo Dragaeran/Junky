@@ -3,21 +3,25 @@
  */
 let port = process.env.PORT || 5000;
 
+
 //##################################################################################
 //################################### IMPORTS ######################################
 //##################################################################################
 
+const cheerio = require("cheerio");
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const CronJob = require('cron').CronJob;
+const request = require('request')
 
-latruite = null
+let params = require("./params.json")
+latruite = null;
 
 //##################################################################################
 //################################ DECLARATIONS ####################################
 //##################################################################################
 
-
+let bm = "http://dites.bonjourmadame.fr/archive/2016/1";
 let feed = require('feed-read');
 let hello_cmd = ["salut", "bonjour", "yo", "yop", "hey", "plop", "hi"];
 let RSSFEED_BM = "http://dites.bonjourmadame.fr/rss";
@@ -40,6 +44,23 @@ function sendMadame(random, channelID) {
     });
 }
 
+function sendRandomMadame(bm) {
+    request({uri: bm}, function (err, response, body) {
+        let self = this;
+        self.items = []
+        if (err && response.statusCode !== 200)
+            console.log('Request error.');
+        let $ = cheerio.load(body);
+        $body = $('body')
+        $image = $body.find('.has_imageurl');
+        console.log($image)
+
+    })
+
+
+}
+
+sendRandomMadame(bm);
 
 function contains(a, obj) {
     for (i = 0; i < a.length; i++) {
@@ -78,18 +99,18 @@ client.on('ready', () => {
 
     //MIDI
     new CronJob('00 00 12 * * 1-5', function () {
-        latruite.sendMessage( "On mange où ?");
+        latruite.sendMessage("On mange où ?");
     }, null, true, 'Europe/Paris');
 
 
     new CronJob('00 15 12 * * 1-5', function () {
-        latruite.sendMessage( "MangerMangerManger");
+        latruite.sendMessage("MangerMangerManger");
     }, null, true, 'Europe/Paris');
 
 
     //SOIR
     new CronJob('00 30 15 * * 1-5', function () {
-        latruite.sendMessage( "Pause");
+        latruite.sendMessage("Pause");
     }, null, true, 'Europe/Paris');
 
 
@@ -132,4 +153,4 @@ client.on("message", (message) => {
 ;
 
 
-client.login("MzAxMzcxMzYxOTQxNTIwMzg0.C86Bdw.cqhHcjbRihszoQtd8PbNdd8oyrk");
+client.login(params.token);

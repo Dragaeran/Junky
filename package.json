@@ -4,9 +4,12 @@
   "description": "Small jerky bot",
   "main": "discord-bot.js",
   "dependencies": {
+    "cheerio": "^0.22.0",
     "cron": "^1.2.1",
     "discord.js": "^11.0.0",
-    "feed-read": "^0.0.1"
+    "feed-read": "^0.0.1",
+    "jquery": "^3.2.1",
+    "request": "^2.81.0"
   },
   "devDependencies": {},
   "scripts": {
