@@ -21,7 +21,7 @@ latruite = null;
 //################################ DECLARATIONS ####################################
 //##################################################################################
 
-let bm = "http://dites.bonjourmadame.fr/archive/2016/1";
+let bm = "http://dites.bonjourmadame.fr/archive/";
 let feed = require('feed-read');
 let hello_cmd = ["salut", "bonjour", "yo", "yop", "hey", "plop", "hi"];
 let RSSFEED_BM = "http://dites.bonjourmadame.fr/rss";
@@ -44,29 +44,60 @@ function sendMadame(random, channelID) {
     });
 }
 
-function sendRandomMadame(bm) {
-    request({uri: bm}, function (err, response, body) {
-        let self = this;
-        self.items = []
+function sendRandomMadame(bm, channelID) {
+    let date = new Date();
+    console.log(date)
+    dayLimit = 30;
+    monthLimit = 12;
+    randYear = Math.floor((Math.random() * 2) + 1) + 2015;
+
+    if (randYear == date.getFullYear()) {
+        monthLimit = date.getMonth();
+    }
+
+    randMonth = Math.floor((Math.random() * monthLimit) + 1);
+
+    if (randMonth == date.getMonth()) dayLimit = date.getDay();
+    else {
+        if (randYear == 2016 && randMonth == 2)
+            dayLimit = 28;
+        else if (randMonth == 2)
+            dayLimit = 27;
+        else if (randMonth == 1 | 3 | 5 | 7 | 8 | 10 | 12)
+            dayLimit = 31;
+
+    }
+    randDay = Math.floor((Math.random() * dayLimit) + 1);
+
+    request({uri: bm + randYear + "/" + randMonth}, function (err, response, body) {
         if (err && response.statusCode !== 200)
             console.log('Request error.');
         let $ = cheerio.load(body);
-        $body = $('body')
-        $image = $body.find('.has_imageurl');
 
-        $image.each(function (i, item) {
-            let attribs = item.attribs
-            console.log(attribs['data-imageurl'])
-        })
+        $body = $('body');
+        $images = $body.find('.has_imageurl');
 
+        console.log("Date  = %d %d %d", randDay, randMonth, randYear);
+        try {
+            selectedImage = $images[randDay].attribs['data-imageurl'];
 
+            console.log("Image correspondante au %d, %s", randDay, selectedImage);
+            try {
+                 hackedImage = selectedImage.replace("250.jpg", "500.jpg");
+            }catch (e) {
+                 hackedImage = selectedImage.replace("250.png", "500.png");
+            }
+
+            channelID.sendMessage(hackedImage);
+
+        } catch (e) {
+            console.log("Erreur. Il n'y a pas d'image à cette date :(")
+        }
 
     })
-
-
 }
 
-sendRandomMadame(bm);
+
 
 function contains(a, obj) {
     for (i = 0; i < a.length; i++) {
@@ -90,7 +121,7 @@ client.on('ready', () => {
     console.log('I am ready!');
     latruite = client.channels.get('240475080851718144');
     console.log("Starting cron tasks...");
-    latruite.send("Junky started and ready to fap itself.");
+    latruite.send("Junky started and ready to slap some asses.");
 
     //MATIN
     new CronJob('00 00 10 * * 1-5', function () {
@@ -129,7 +160,7 @@ client.on('ready', () => {
 
     new CronJob('00 30 10 * * 1-5', function () {
         latruite.sendMessage("Et on dit Bonjour Madame !");
-        latruite.sendMadame(false, latruite);
+        sendMadame(false, latruite);
 
     }, null, true, 'Europe/Paris');
 });
@@ -139,7 +170,8 @@ client.on("message", (message) => {
     let msg_content = message.content.toLowerCase();
     switch (msg_content) {
         case '!rand' :
-            sendMadame(true, message.channel);
+            sendRandomMadame(bm, message.channel)
+
             break;
 
         case contains(hello_cmd, msg_content):
