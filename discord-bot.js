@@ -22,6 +22,7 @@ latruite = null;
 //##################################################################################
 
 let bm = "http://dites.bonjourmadame.fr/archive/";
+let moule = "https://jano-limites.tumblr.com/archive/";
 let feed = require('feed-read');
 let hello_cmd = ["salut", "bonjour", "yo", "yop", "hey", "plop", "hi"];
 let RSSFEED_BM = "http://dites.bonjourmadame.fr/rss";
@@ -81,22 +82,23 @@ function sendRandomMadame(bm, channelID) {
 
         $body = $('body');
         $images = $body.find('.has_imageurl');
-
         console.log("Date  = %d %d %d", randDay, randMonth, randYear);
         try {
             selectedImage = $images[randDay].attribs['data-imageurl'];
 
             console.log("Image correspondante au %d, %s", randDay, selectedImage);
             try {
-                 hackedImage = selectedImage.replace("250.jpg", "500.jpg");
-            }catch (e) {
-                 hackedImage = selectedImage.replace("250.png", "500.png");
+                hackedImage = selectedImage.replace("250.jpg", "500.jpg");
+            } catch (e) {
+                console.log("Erreur dans le changement de taille :(")
+                //hackedImage = selectedImage.replace("250.png", "500.png");
             }
 
             channelID.sendMessage(hackedImage);
 
         } catch (e) {
             console.log("Erreur. Il n'y a pas d'image à cette date :(")
+            sendRandomMadame(bm, channelID)
         }
 
     })
@@ -182,6 +184,9 @@ client.on("message", (message) => {
     switch (msg_content) {
         case '!rand' :
             sendRandomMadame(bm, message.channel);
+            break;
+        case '!randmoule' :
+            sendRandomMadame(moule, message.channel);
             break;
 
         case contains(hello_cmd, msg_content):
