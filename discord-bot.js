@@ -1,7 +1,7 @@
 /**
  * Created by Flavian on 11/04/2017.
  */
-let port = process.env.PORT || 5000;
+
 
 
 //##################################################################################
@@ -26,12 +26,16 @@ let feed = require('feed-read');
 let hello_cmd = ["salut", "bonjour", "yo", "yop", "hey", "plop", "hi"];
 let RSSFEED_BM = "http://dites.bonjourmadame.fr/rss";
 
+let helpMsg = "Tiens, on demande mon aide ? \n" +
+    "- !bm : affiche la dernière bm de la journée \n" +
+    "- !rand : affiche une bm aléatoire \n";
+
 
 //##################################################################################
 //################################## FUNCTIONS #####################################
 //##################################################################################
 
-
+//returns a random (or not) bm from the last ones. If false is given it will return the very last one bm.
 function sendMadame(random, channelID) {
     feed(RSSFEED_BM, function (err, articles) {
         index = 0;
@@ -44,9 +48,10 @@ function sendMadame(random, channelID) {
     });
 }
 
+
+//connect to bm archives and suck all the images in a given page, then returns a random one.
 function sendRandomMadame(bm, channelID) {
     let date = new Date();
-    console.log(date)
     dayLimit = 30;
     monthLimit = 12;
     randYear = Math.floor((Math.random() * 2) + 1) + 2015;
@@ -98,7 +103,7 @@ function sendRandomMadame(bm, channelID) {
 }
 
 
-
+//returns either and object is present in a list, or false.
 function contains(a, obj) {
     for (i = 0; i < a.length; i++) {
         if (a[i] === obj) {
@@ -108,9 +113,6 @@ function contains(a, obj) {
     return false;
 }
 
-//##################################################################################
-//################################## REACTIONS #####################################
-//##################################################################################
 
 //##################################################################################
 //################################## CRON JOBS #####################################
@@ -119,8 +121,11 @@ function contains(a, obj) {
 client.on('ready', () => {
 
     console.log('I am ready!');
+
     latruite = client.channels.get('240475080851718144');
+
     console.log("Starting cron tasks...");
+
     latruite.send("Junky started and ready to slap some asses.");
 
     //MATIN
@@ -163,19 +168,28 @@ client.on('ready', () => {
         sendMadame(false, latruite);
 
     }, null, true, 'Europe/Paris');
+
+    console.log("Task successfully started.")
 });
+
+//##################################################################################
+//################################## REACTIONS #####################################
+//##################################################################################
 
 
 client.on("message", (message) => {
     let msg_content = message.content.toLowerCase();
     switch (msg_content) {
         case '!rand' :
-            sendRandomMadame(bm, message.channel)
-
+            sendRandomMadame(bm, message.channel);
             break;
 
         case contains(hello_cmd, msg_content):
             message.channel.sendMessage("Ta gueule.");
+            break;
+
+        case "!help":
+            message.channel.sendMessage(helpMsg);
             break;
 
         case '!bm' :
@@ -190,5 +204,7 @@ client.on("message", (message) => {
 })
 ;
 
-
+//##################################################################################
+//################################### STARTUP ######################################
+//##################################################################################
 client.login(params.token);
