@@ -16,6 +16,7 @@ const request = require('request')
 
 let params = require("./params.json")
 latruite = null;
+minouland = null;
 
 //##################################################################################
 //################################ DECLARATIONS ####################################
@@ -52,6 +53,8 @@ function sendMadame(random, channelID) {
 
 //connect to bm archives and suck all the images in a given page, then returns a random one.
 function sendRandomMadame(bm, channelID) {
+
+
     let date = new Date();
     dayLimit = 30;
     monthLimit = 12;
@@ -124,7 +127,9 @@ client.on('ready', () => {
 
     console.log('I am ready!');
 
-    latruite = client.channels.get('240475080851718144');
+    minouland = client.channels.get('240475080851718144');
+    latruite = client.channels.get('304170943339823104');
+
 
     console.log("Starting cron tasks...");
 
@@ -180,13 +185,16 @@ client.on('ready', () => {
 
 
 client.on("message", (message) => {
+    minouland = client.channels.get('240475080851718144');
+    latruite = client.channels.get('304170943339823104');
+
     let msg_content = message.content.toLowerCase();
     switch (msg_content) {
         case '!rand' :
             sendRandomMadame(bm, message.channel);
             break;
         case '!randmoule' :
-            sendRandomMadame(moule, message.channel);
+            sendRandomMadame(moule, minouland);
             break;
 
         case contains(hello_cmd, msg_content):
