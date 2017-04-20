@@ -22,15 +22,79 @@ minouland = null;
 //################################ DECLARATIONS ####################################
 //##################################################################################
 
-let bm = "http://dites.bonjourmadame.fr/archive/";
+//TUMBLRS ARCHIVES
+
+//hard
 let moule = "https://jano-limites.tumblr.com/archive/";
+let womenlover = "https://womenlover2014.tumblr.com/archive/"
+let blackknees = "http://blacknees.tumblr.com/archive/"
+let perfectredhead = "http://perfectredheads.tumblr.com/archive/"
+let stunningred = "https://stunningredheads.tumblr.com/archive/"
+let redHard ="http://cibucknel.tumblr.com/archive/"
+
+//soft
+let bm = "http://dites.bonjourmadame.fr/archive/";
+let babesinbed = "http://babes-in-bed.tumblr.com/archive/";
+let pascalRousse = "http://redheadsexygirls.tumblr.com/archive/"
+let pascalAddict = "http://veracious-venom.tumblr.com/archive/"
+let pascalRussian = "https://russian--beauty.tumblr.com/archive/"
+let pascalYoga = "http://sexyhottonedbabes.tumblr.com/archive/"
+let pascalAsiat = "http://hot-asian-beauties.tumblr.com/archive/"
+let pascalTatoo = "https://tattoogirls66.tumblr.com/archive/"
+let pascalBeach = "http://69bk.tumblr.com/archive/"
+let pascalLegs = "http://trautmans-legs.tumblr.com/archive/"
+let pascalBabe = "http://babes-in-bed.tumblr.com/archive/"
+let ginger = "http://ginger-redhead-and-hot.tumblr.com/archive/"
+
+//#################################### ARRAYS ########################################
+let softTumblrList = [
+    bm,
+    babesinbed,
+    pascalAddict,
+    pascalAsiat,
+    pascalBabe,
+    pascalBeach,
+    pascalLegs,
+    pascalRousse,
+    pascalRussian,
+    pascalTatoo,
+    pascalYoga,
+    ginger
+];
+
+
+let hardTumblrList = [
+    moule,
+    womenlover,
+    blackknees,
+    perfectredhead,
+    stunningred,
+    redHard
+];
+
+
+let addict = [pascalAddict]
+
+let rousse = [pascalRousse, ginger]
+
+let rousseHard = [
+    blackknees,
+    perfectredhead,
+    stunningred,
+    redHard
+]
+
 let feed = require('feed-read');
 let hello_cmd = ["salut", "bonjour", "yo", "yop", "hey", "plop", "hi"];
 let RSSFEED_BM = "http://dites.bonjourmadame.fr/rss";
 
-let helpMsg = "Tiens, on demande mon aide ? \n" +
-    "- !bm : affiche la dernière bm de la journée \n" +
-    "- !rand : affiche une bm aléatoire \n";
+
+let helpMsg = "Tiens, on demande mon aide ? Gaffe, tout est NSFW !\n" +
+    "- !bm : affiche la dernière bm de la journée, \n" +
+    "- !rand all: affiche une bombe aléatoire parmis tous les tumblr que nous compatriotes ont bien voulu me donner, \n" +
+    "- !rand hard : affiche une fracture de la rétine dans minouland. T'es prévenu, 'y a d'la pêche et de l'oignon ! \n" +
+    "- !rousse : Parce que l'Irlande c'est quand même un beau pays, \n" +
+    "- !addict : Je sais même pas ce que t'attends de ça mais pourquoi pas.";
 
 
 //##################################################################################
@@ -52,7 +116,9 @@ function sendMadame(random, channelID) {
 
 
 //connect to bm archives and suck all the images in a given page, then returns a random one.
-function sendRandomMadame(bm, channelID) {
+function sendRandomTumblrPic(tumblrList, channelID) {
+
+    let tumblr = selectRandTumblr(tumblrList);
 
 
     let date = new Date();
@@ -78,14 +144,15 @@ function sendRandomMadame(bm, channelID) {
     }
     randDay = Math.floor((Math.random() * dayLimit) + 1);
 
-    request({uri: bm + randYear + "/" + randMonth}, function (err, response, body) {
+    request({uri: tumblr + randYear + "/" + randMonth}, function (err, response, body) {
         if (err && response.statusCode !== 200)
             console.log('Request error.');
         let $ = cheerio.load(body);
 
         $body = $('body');
         $images = $body.find('.has_imageurl');
-        console.log("Date  = %d %d %d", randDay, randMonth, randYear);
+        let tumblrDate = randDay + "/" + randMonth + "/" + randYear
+        console.log(tumblrDate);
         try {
             selectedImage = $images[randDay].attribs['data-imageurl'];
 
@@ -94,14 +161,15 @@ function sendRandomMadame(bm, channelID) {
                 hackedImage = selectedImage.replace("250.jpg", "500.jpg");
             } catch (e) {
                 console.log("Erreur dans le changement de taille :(")
-                //hackedImage = selectedImage.replace("250.png", "500.png");
             }
 
+            let tumblrName = tumblr.replace("/archive/", "");
+            channelID.sendMessage("Vu sur " + tumblrName + ", le " + tumblrDate + " :");
             channelID.sendMessage(hackedImage);
 
         } catch (e) {
-            console.log("Erreur. Il n'y a pas d'image à cette date :(")
-            sendRandomMadame(bm, channelID)
+            console.log("Erreur. Il n'y a pas d'image à cette date :( Cherchons ailleurs...");
+            sendRandomTumblrPic(tumblrList, channelID)
         }
 
     })
@@ -119,9 +187,17 @@ function contains(a, obj) {
 }
 
 
+function selectRandTumblr(tumblrList) {
+    let index = Math.floor((Math.random() * tumblrList.length));
+    console.log(index + " : " + tumblrList[index]);
+    return tumblrList[index]
+}
+
+
 //##################################################################################
 //################################## CRON JOBS #####################################
 //##################################################################################
+
 
 client.on('ready', () => {
 
@@ -141,7 +217,7 @@ client.on('ready', () => {
     }, null, true, 'Europe/Paris');
 
 
-    new CronJob('00 50 9 * * 1-5', function () {
+    new CronJob('00 45 9 * * 1-5', function () {
         latruite.sendMessage("Prépause");
     }, null, true, 'Europe/Paris');
 
@@ -167,16 +243,28 @@ client.on('ready', () => {
         latruite.sendMessage("Prépause");
     }, null, true, 'Europe/Paris');
 
+    //############# MADAMES ################
 
     //LAST BM
 
-    new CronJob('00 30 10 * * 1-5', function () {
-        latruite.sendMessage("Et on dit Bonjour Madame !");
+    new CronJob('00 30 11 * * 1-5', function () {
+        latruite.sendMessage("C'est l'heure de dire Bonjour Madame !");
         sendMadame(false, latruite);
-
     }, null, true, 'Europe/Paris');
 
-    console.log("Task successfully started.")
+
+    new CronJob('00 30 8 * * 1-5', function () {
+        latruite.sendMessage("Salut les blaireaux !");
+        sendRandomTumblrPic(softTumblrList, latruite);
+    }, null, true, 'Europe/Paris');
+
+
+    new CronJob('00 30 10 * * 1-5', function () {
+        latruite.sendMessage("Et on dit Bonsoir Madame !");
+        sendRandomTumblrPic(softTumblrList, latruite);
+    }, null, true, 'Europe/Paris');
+
+    console.log("Tasks successfully started.")
 });
 
 //##################################################################################
@@ -190,11 +278,13 @@ client.on("message", (message) => {
 
     let msg_content = message.content.toLowerCase();
     switch (msg_content) {
-        case '!rand' :
-            sendRandomMadame(bm, message.channel);
+
+        case '!rand all' :
+            sendRandomTumblrPic(softTumblrList, message.channel);
             break;
-        case '!randmoule' :
-            sendRandomMadame(moule, minouland);
+
+        case '!rand hard' :
+            sendRandomTumblrPic(hardTumblrList, minouland);
             break;
 
         case contains(hello_cmd, msg_content):
@@ -208,10 +298,24 @@ client.on("message", (message) => {
         case '!bm' :
             sendMadame(false, message.channel);
             break;
+
         case 'merci' :
             message.channel.sendMessage("De rien.");
             break;
+
+        case '!rousse' :
+            sendRandomTumblrPic(rousse, message.channel)
+            break;
+
+        case '!addict' :
+            sendRandomTumblrPic(addict, message.channel)
+            break;
+
+        case '!rousse hard' :
+            sendRandomTumblrPic(rousseHard, minouland)
+            break;
         default:
+
             break;
     }
 })
