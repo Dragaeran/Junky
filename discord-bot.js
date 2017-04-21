@@ -14,6 +14,10 @@ const client = new Discord.Client();
 const CronJob = require('cron').CronJob;
 const request = require('request')
 
+/*let tumblrs=require("./tumblrs.js");
+
+console.log(tumblrs.coucou)
+*/
 let params = require("./params.json")
 latruite = null;
 minouland = null;
@@ -30,7 +34,9 @@ let womenlover = "https://womenlover2014.tumblr.com/archive/"
 let blackknees = "http://blacknees.tumblr.com/archive/"
 let perfectredhead = "http://perfectredheads.tumblr.com/archive/"
 let stunningred = "https://stunningredheads.tumblr.com/archive/"
-let redHard ="http://cibucknel.tumblr.com/archive/"
+let redHard = "http://cibucknel.tumblr.com/archive/"
+let ginger = "http://ginger-redhead-and-hot.tumblr.com/archive/"
+
 
 //soft
 let bm = "http://dites.bonjourmadame.fr/archive/";
@@ -44,7 +50,13 @@ let pascalTatoo = "https://tattoogirls66.tumblr.com/archive/"
 let pascalBeach = "http://69bk.tumblr.com/archive/"
 let pascalLegs = "http://trautmans-legs.tumblr.com/archive/"
 let pascalBabe = "http://babes-in-bed.tumblr.com/archive/"
-let ginger = "http://ginger-redhead-and-hot.tumblr.com/archive/"
+
+//cosplay
+let sexiestCosplay = "http://nerdynakedgirls.tumblr.com/archive/"
+let nerdyNaked = "http://ginger-redhead-and-hot.tumblr.com/archive/"
+let cosplayBooties = "http://cosplay-booties.tumblr.com/archive/"
+let cosplayHot = "https://cosplayhot22.tumblr.com/archive/"
+let insanelyHotCosplay = "https://cosplayhot22.tumblr.com/archive/"
 
 //#################################### ARRAYS ########################################
 let softTumblrList = [
@@ -72,18 +84,40 @@ let hardTumblrList = [
     redHard
 ];
 
+let cosplayList =[
+    sexiestCosplay,
+    nerdyNaked,
+    cosplayBooties,
+    cosplayHot,
+    insanelyHotCosplay
+]
 
 let addict = [pascalAddict]
 
-let rousse = [pascalRousse, ginger]
+let rousse = [pascalRousse]
 
 let rousseHard = [
     blackknees,
     perfectredhead,
     stunningred,
-    redHard
-]
+    redHard,
+    ginger
+];
 
+/*
+let softTumblrList = tumblrs.soft;
+
+let hardTumblrList = tumblrs.hard;
+
+let cosplayList = tumblrs.cosplay.;
+
+let addict = tumblrs.addict;
+
+let rousse = tumblrs.rousse
+
+let rousseHard = JSON.stringify(tumblrs.rousseHard)
+console.log(rousseHard)
+*/
 let feed = require('feed-read');
 let hello_cmd = ["salut", "bonjour", "yo", "yop", "hey", "plop", "hi"];
 let RSSFEED_BM = "http://dites.bonjourmadame.fr/rss";
@@ -120,29 +154,11 @@ function sendRandomTumblrPic(tumblrList, channelID) {
 
     let tumblr = selectRandTumblr(tumblrList);
 
-
     let date = new Date();
-    dayLimit = 30;
     monthLimit = 12;
     randYear = Math.floor((Math.random() * 2) + 1) + 2015;
 
-    if (randYear == date.getFullYear()) {
-        monthLimit = date.getMonth();
-    }
-
     randMonth = Math.floor((Math.random() * monthLimit) + 1);
-
-    if (randMonth == date.getMonth()) dayLimit = date.getDay();
-    else {
-        if (randYear == 2016 && randMonth == 2)
-            dayLimit = 28;
-        else if (randMonth == 2)
-            dayLimit = 27;
-        else if (randMonth == 1 | 3 | 5 | 7 | 8 | 10 | 12)
-            dayLimit = 31;
-
-    }
-    randDay = Math.floor((Math.random() * dayLimit) + 1);
 
     request({uri: tumblr + randYear + "/" + randMonth}, function (err, response, body) {
         if (err && response.statusCode !== 200)
@@ -151,12 +167,14 @@ function sendRandomTumblrPic(tumblrList, channelID) {
 
         $body = $('body');
         $images = $body.find('.has_imageurl');
-        let tumblrDate = randDay + "/" + randMonth + "/" + randYear
-        console.log(tumblrDate);
-        try {
-            selectedImage = $images[randDay].attribs['data-imageurl'];
 
-            console.log("Image correspondante au %d, %s", randDay, selectedImage);
+        let randIndex = Math.floor((Math.random() * $images.length) + 1);
+
+        try {
+            selectedImage = $images[randIndex].attribs['data-imageurl'];
+
+            console.log("Image correspondante au %d, %s", randIndex, selectedImage);
+
             try {
                 hackedImage = selectedImage.replace("250.jpg", "500.jpg");
             } catch (e) {
@@ -164,7 +182,7 @@ function sendRandomTumblrPic(tumblrList, channelID) {
             }
 
             let tumblrName = tumblr.replace("/archive/", "");
-            channelID.sendMessage("Vu sur " + tumblrName + ", le " + tumblrDate + " :");
+            channelID.sendMessage("Vu sur " + tumblrName + ":");
             channelID.sendMessage(hackedImage);
 
         } catch (e) {
@@ -203,8 +221,8 @@ client.on('ready', () => {
 
     console.log('I am ready!');
 
-    minouland = client.channels.get('240475080851718144');
-    latruite = client.channels.get('304170943339823104');
+    minouland = client.channels.get(params.minoulandID);
+    latruite = client.channels.get(params.latruiteID);
 
 
     console.log("Starting cron tasks...");
@@ -314,8 +332,22 @@ client.on("message", (message) => {
         case '!rousse hard' :
             sendRandomTumblrPic(rousseHard, minouland)
             break;
-        default:
 
+        case '!cosplay' :
+            sendRandomTumblrPic(cosplayList, message.channel)
+            break;
+
+        case '!beach' :
+            let beach=[pascalBeach];
+            sendRandomTumblrPic(beach, message.channel)
+            break;
+
+        case '!yoga' :
+            let yoga=[pascalYoga];
+            sendRandomTumblrPic(yoga, message.channel)
+            break;
+
+        default:
             break;
     }
 })
