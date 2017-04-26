@@ -16,8 +16,8 @@ const request = require('request')
 
 /*let tumblrs=require("./tumblrs.js");
 
-console.log(tumblrs.coucou)
-*/
+ console.log(tumblrs.coucou)
+ */
 let params = require("./params.json")
 latruite = null;
 minouland = null;
@@ -50,10 +50,13 @@ let pascalTatoo = "https://tattoogirls66.tumblr.com/archive/"
 let pascalBeach = "http://69bk.tumblr.com/archive/"
 let pascalLegs = "http://trautmans-legs.tumblr.com/archive/"
 let pascalBabe = "http://babes-in-bed.tumblr.com/archive/"
+let backside = "https://thebeautifulbackside.tumblr.com/archive/"
+let backDimples = "http://sexyhotbackdimples.tumblr.com/archive/";
+let sexyWomen = "http://everythingifindsexyaboutwomen.tumblr.com/archive/"
+let sexyButt = "http://sexyhotbutts.tumblr.com/archive/"
 
 //cosplay
 let sexiestCosplay = "http://nerdynakedgirls.tumblr.com/archive/"
-let nerdyNaked = "http://ginger-redhead-and-hot.tumblr.com/archive/"
 let cosplayBooties = "http://cosplay-booties.tumblr.com/archive/"
 let cosplayHot = "https://cosplayhot22.tumblr.com/archive/"
 let insanelyHotCosplay = "https://cosplayhot22.tumblr.com/archive/"
@@ -71,7 +74,10 @@ let softTumblrList = [
     pascalRussian,
     pascalTatoo,
     pascalYoga,
-    ginger
+    backside,
+    backDimples,
+    sexyWomen,
+    sexyButt
 ];
 
 
@@ -81,12 +87,12 @@ let hardTumblrList = [
     blackknees,
     perfectredhead,
     stunningred,
-    redHard
+    redHard,
+    ginger
 ];
 
-let cosplayList =[
+let cosplayList = [
     sexiestCosplay,
-    nerdyNaked,
     cosplayBooties,
     cosplayHot,
     insanelyHotCosplay
@@ -96,6 +102,15 @@ let addict = [pascalAddict]
 
 let rousse = [pascalRousse]
 
+let boule = [
+
+    backDimples,
+    sexyButt]
+
+let beach = [pascalBeach];
+
+let yoga = [pascalYoga];
+
 let rousseHard = [
     blackknees,
     perfectredhead,
@@ -104,31 +119,21 @@ let rousseHard = [
     ginger
 ];
 
-/*
-let softTumblrList = tumblrs.soft;
 
-let hardTumblrList = tumblrs.hard;
-
-let cosplayList = tumblrs.cosplay.;
-
-let addict = tumblrs.addict;
-
-let rousse = tumblrs.rousse
-
-let rousseHard = JSON.stringify(tumblrs.rousseHard)
-console.log(rousseHard)
-*/
 let feed = require('feed-read');
 let hello_cmd = ["salut", "bonjour", "yo", "yop", "hey", "plop", "hi"];
 let RSSFEED_BM = "http://dites.bonjourmadame.fr/rss";
 
 
 let helpMsg = "Tiens, on demande mon aide ? Gaffe, tout est NSFW !\n" +
-    "- !bm : affiche la dernière bm de la journée, \n" +
-    "- !rand all: affiche une bombe aléatoire parmis tous les tumblr que nous compatriotes ont bien voulu me donner, \n" +
+    "- !bm : affiche la dernière bm de la journée \n" +
+    "- !rand all: affiche une bombe aléatoire parmis tous les tumblr que nous compatriotes ont bien voulu me donner \n" +
     "- !rand hard : affiche une fracture de la rétine dans minouland. T'es prévenu, 'y a d'la pêche et de l'oignon ! \n" +
-    "- !rousse : Parce que l'Irlande c'est quand même un beau pays, \n" +
-    "- !addict : Je sais même pas ce que t'attends de ça mais pourquoi pas.";
+    "- !rousse : Parce que l'Irlande c'est quand même un beau pays \n" +
+    "- !addict : Je sais même pas ce que t'attends de ça mais pourquoi pas \n" +
+    "- !boule : On veut de la bulle ? Du bon boulard des familles ? C'est ici ! \n" +
+    "- !yoga : De l'amour des formes géométriques et du feng-shui \n" +
+    "- !beach : Ahh, l'air iodé de la mer, le doux vent estival qui donne la chair de poule... \n";
 
 
 //##################################################################################
@@ -156,7 +161,7 @@ function sendRandomTumblrPic(tumblrList, channelID) {
 
     let date = new Date();
     monthLimit = 12;
-    randYear = Math.floor((Math.random() * 2) + 1) + 2015;
+    randYear = Math.floor((Math.random() * 2) + 1) + 2014;
 
     randMonth = Math.floor((Math.random() * monthLimit) + 1);
 
@@ -169,7 +174,6 @@ function sendRandomTumblrPic(tumblrList, channelID) {
         $images = $body.find('.has_imageurl');
 
         let randIndex = Math.floor((Math.random() * $images.length) + 1);
-
         try {
             selectedImage = $images[randIndex].attribs['data-imageurl'];
 
@@ -227,7 +231,7 @@ client.on('ready', () => {
 
     console.log("Starting cron tasks...");
 
-    latruite.send("Junky started and ready to slap some asses.");
+    //latruite.send("Junky started and ready to slap some asses.");
 
     //MATIN
     new CronJob('00 00 10 * * 1-5', function () {
@@ -338,13 +342,17 @@ client.on("message", (message) => {
             break;
 
         case '!beach' :
-            let beach=[pascalBeach];
+
             sendRandomTumblrPic(beach, message.channel)
             break;
 
         case '!yoga' :
-            let yoga=[pascalYoga];
+
             sendRandomTumblrPic(yoga, message.channel)
+            break;
+
+        case '!boule' :
+            sendRandomTumblrPic(boule, message.channel)
             break;
 
         default:
