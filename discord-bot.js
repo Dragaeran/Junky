@@ -21,6 +21,7 @@ const request = require('request')
 let params = require("./params.json")
 latruite = null;
 minouland = null;
+debug = null;
 
 //##################################################################################
 //################################ DECLARATIONS ####################################
@@ -127,8 +128,8 @@ let RSSFEED_BM = "http://dites.bonjourmadame.fr/rss";
 
 let helpMsg = "Tiens, on demande mon aide ? Gaffe, tout est NSFW !\n" +
     "- !bm : affiche la dernière bm de la journée \n" +
-    "- !rand all: affiche une bombe aléatoire parmis tous les tumblr que nous compatriotes ont bien voulu me donner \n" +
-    "- !rand hard : affiche une fracture de la rétine dans minouland. T'es prévenu, 'y a d'la pêche et de l'oignon ! \n" +
+    "- !ra: affiche une bombe aléatoire parmis tous les tumblr que nous compatriotes ont bien voulu me donner \n" +
+    "- !rh : affiche une fracture de la rétine dans minouland. T'es prévenu, 'y a d'la pêche et de l'oignon ! \n" +
     "- !rousse : Parce que l'Irlande c'est quand même un beau pays \n" +
     "- !addict : Je sais même pas ce que t'attends de ça mais pourquoi pas \n" +
     "- !boule : On veut de la bulle ? Du bon boulard des familles ? C'est ici ! \n" +
@@ -227,15 +228,15 @@ client.on('ready', () => {
 
     minouland = client.channels.get(params.minoulandID);
     latruite = client.channels.get(params.latruiteID);
-
+    debug = client.channels.get(params.debugID);
 
     console.log("Starting cron tasks...");
 
-    //latruite.send("Junky started and ready to slap some asses.");
+    debug.sendMessage("Junky started and ready to slap some asses.");
 
     //MATIN
     new CronJob('00 00 10 * * 1-5', function () {
-        latruite.sendMessage("Pause")
+        latruite.sendMessage("Pause");
     }, null, true, 'Europe/Paris');
 
 
@@ -295,17 +296,18 @@ client.on('ready', () => {
 
 
 client.on("message", (message) => {
-    minouland = client.channels.get('240475080851718144');
-    latruite = client.channels.get('304170943339823104');
+    minouland = client.channels.get(params.minoulandID);
+    latruite = client.channels.get(params.latruiteID);
+    debug = client.channels.get(params.debugID);
 
     let msg_content = message.content.toLowerCase();
     switch (msg_content) {
 
-        case '!rand all' :
+        case '!ra' :
             sendRandomTumblrPic(softTumblrList, message.channel);
             break;
 
-        case '!rand hard' :
+        case '!rh' :
             sendRandomTumblrPic(hardTumblrList, minouland);
             break;
 
