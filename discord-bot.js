@@ -333,10 +333,12 @@ client.on("message", (message) => {
     switch (msg_content) {
 
         case '!ra' :
+            message.delete();
             sendRandomTumblrPic(softTumblrList, message.channel);
             break;
 
         case '!rh' :
+            message.delete()
             sendRandomTumblrPic(hardTumblrList, minouland);
             break;
 
@@ -345,10 +347,12 @@ client.on("message", (message) => {
             break;
 
         case "!help":
+            message.delete()
             message.channel.sendMessage(helpMsg);
             break;
 
         case '!bm' :
+            message.delete()
             sendMadame(false, message.channel);
             break;
 
@@ -357,32 +361,39 @@ client.on("message", (message) => {
             break;
 
         case '!rousse' :
+            message.delete()
             sendRandomTumblrPic(rousse, message.channel)
             break;
 
         case '!addict' :
+            message.delete()
             sendRandomTumblrPic(addict, message.channel)
             break;
 
         case '!rousse hard' :
+            message.delete()
             sendRandomTumblrPic(rousseHard, minouland)
             break;
 
         case '!cosplay' :
+            message.delete()
             sendRandomTumblrPic(cosplayList, message.channel)
             break;
 
         case '!beach' :
+            message.delete()
 
             sendRandomTumblrPic(beach, message.channel)
             break;
 
         case '!yoga' :
+            message.delete()
 
             sendRandomTumblrPic(yoga, message.channel)
             break;
 
         case '!boule' :
+            message.delete()
             sendRandomTumblrPic(boule, message.channel)
             break;
 
