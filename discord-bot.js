@@ -55,6 +55,7 @@ let backside = "https://thebeautifulbackside.tumblr.com/archive/"
 let backDimples = "http://sexyhotbackdimples.tumblr.com/archive/";
 let sexyWomen = "http://everythingifindsexyaboutwomen.tumblr.com/archive/"
 let sexyButt = "http://sexyhotbutts.tumblr.com/archive/"
+let amazingAss = "http://justamazingass.tumblr.com/archive/"
 
 //cosplay
 let sexiestCosplay = "http://nerdynakedgirls.tumblr.com/archive/"
@@ -78,7 +79,8 @@ let softTumblrList = [
     backside,
     backDimples,
     sexyWomen,
-    sexyButt
+    sexyButt,
+    amazingAss
 ];
 
 
@@ -104,7 +106,7 @@ let addict = [pascalAddict]
 let rousse = [pascalRousse]
 
 let boule = [
-
+    amazingAss,
     backDimples,
     sexyButt]
 
@@ -218,15 +220,83 @@ function selectRandTumblr(tumblrList) {
 
 
 //##################################################################################
+//################################## REACTIONS #####################################
+//##################################################################################
+
+//##################################################################################
 //################################## CRON JOBS #####################################
 //##################################################################################
+let pauseMatin = new CronJob('00 00 10 * * 1-5', function () {
+    latruite.sendMessage("Pause");
+}, null, false, 'Europe/Paris');
+
+
+let prepauseMatin = new CronJob('00 45 9 * * 1-5', function () {
+    latruite.sendMessage("Prépause");
+}, null, false, 'Europe/Paris');
+
+
+//MIDI
+let mangerMidi = new CronJob('00 00 12 * * 1-5', function () {
+    latruite.sendMessage("On mange où ?");
+}, null, false, 'Europe/Paris');
+
+
+let mangerManger = new CronJob('00 15 12 * * 1-5', function () {
+    latruite.sendMessage("MangerMangerManger");
+}, null, false, 'Europe/Paris');
+
+
+//SOIR
+let pauseSoir = new CronJob('00 30 15 * * 1-5', function () {
+    latruite.sendMessage("Pause");
+}, null, false, 'Europe/Paris');
+
+
+let prepauseSoir = new CronJob('00 15 15 * * 1-5', function () {
+    latruite.sendMessage("Prépause");
+}, null, false, 'Europe/Paris');
+
+//############# MADAMES ################
+
+//LAST BM
+
+let matinBm = new CronJob('00 30 11 * * 1-5', function () {
+    latruite.sendMessage("C'est l'heure de dire Bonjour Madame !");
+    sendMadame(false, latruite);
+}, null, false, 'Europe/Paris');
+
+
+let bonjourBm = new CronJob('00 30 8 * * 1-5', function () {
+    latruite.sendMessage("Salut les blaireaux !");
+    sendRandomTumblrPic(softTumblrList, latruite);
+}, null, false, 'Europe/Paris');
+
+
+let soirBm = new CronJob('00 20 17 * * 1-5', function () {
+    latruite.sendMessage("Et on dit Bonsoir Madame avant de se casser !");
+    sendRandomTumblrPic(softTumblrList, latruite);
+}, null, false, 'Europe/Paris');
+
+
+let cronJobs = [
+    matinBm,
+    bonjourBm,
+    soirBm,
+    pauseMatin,
+    prepauseMatin,
+    pauseSoir,
+    prepauseSoir,
+    mangerManger,
+    mangerMidi
+]
 
 
 client.on('ready', () => {
 
-    console.log('I am ready!');
+    console.log('Connected !');
 
-    minouland = client.channels.get(params.minoulandID);
+    //minouland = client.channels.get(params.minoulandID);
     latruite = client.channels.get(params.latruiteID);
     debug = client.channels.get(params.debugID);
 
@@ -234,66 +304,25 @@ client.on('ready', () => {
 
     debug.sendMessage("Junky started and ready to slap some asses.");
 
-    //MATIN
-    new CronJob('00 00 10 * * 1-5', function () {
-        latruite.sendMessage("Pause");
-    }, null, true, 'Europe/Paris');
-
-
-    new CronJob('00 45 9 * * 1-5', function () {
-        latruite.sendMessage("Prépause");
-    }, null, true, 'Europe/Paris');
-
-
-    //MIDI
-    new CronJob('00 00 12 * * 1-5', function () {
-        latruite.sendMessage("On mange où ?");
-    }, null, true, 'Europe/Paris');
-
-
-    new CronJob('00 15 12 * * 1-5', function () {
-        latruite.sendMessage("MangerMangerManger");
-    }, null, true, 'Europe/Paris');
-
-
-    //SOIR
-    new CronJob('00 30 15 * * 1-5', function () {
-        latruite.sendMessage("Pause");
-    }, null, true, 'Europe/Paris');
-
-
-    new CronJob('00 15 15 * * 1-5', function () {
-        latruite.sendMessage("Prépause");
-    }, null, true, 'Europe/Paris');
-
-    //############# MADAMES ################
-
-    //LAST BM
-
-    new CronJob('00 30 11 * * 1-5', function () {
-        latruite.sendMessage("C'est l'heure de dire Bonjour Madame !");
-        sendMadame(false, latruite);
-    }, null, true, 'Europe/Paris');
-
-
-    new CronJob('00 30 8 * * 1-5', function () {
-        latruite.sendMessage("Salut les blaireaux !");
-        sendRandomTumblrPic(softTumblrList, latruite);
-    }, null, true, 'Europe/Paris');
-
-
-    new CronJob('00 30 10 * * 1-5', function () {
-        latruite.sendMessage("Et on dit Bonsoir Madame !");
-        sendRandomTumblrPic(softTumblrList, latruite);
-    }, null, true, 'Europe/Paris');
+    for (let job in cronJobs) {
+        cronJobs[job].start(latruite);
+    }
 
     console.log("Tasks successfully started.")
 });
 
-//##################################################################################
-//################################## REACTIONS #####################################
-//##################################################################################
 
+client.on("disconnect", function () {
+    console.log("Connection lost. Stopping Jobs...")
+    for (let job in cronJobs) {
+        cronJobs[job].stop();
+    }
+    console.log("Jobs Stopped.")
+});
+
+client.on("reconnecting", function () {
+    console.log("Trying to reconnect...")
+})
 
 client.on("message", (message) => {
     minouland = client.channels.get(params.minoulandID);
@@ -367,3 +396,5 @@ client.on("message", (message) => {
 //################################### STARTUP ######################################
 //##################################################################################
 client.login(params.token);
+
+
