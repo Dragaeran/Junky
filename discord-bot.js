@@ -182,9 +182,9 @@ function sendRandomTumblrPic(tumblrList, channelID) {
             console.log("Image correspondante au %d, %s", randIndex, selectedImage);
 
             try {
-                hackedImage = selectedImage.replace("250.jpg", "500.jpg");
+                hackedImage = selectedImage.replace("250.", "500.");
             } catch (e) {
-                console.log("Erreur dans le changement de taille :(")
+                console.log("Erreur dans le changement de taille :( C'est peut-être un gif ?")
             }
 
             let tumblrName = tumblr.replace("/archive/", "");
