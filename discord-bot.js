@@ -13,22 +13,15 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const CronJob = require('cron').CronJob;
 const request = require('request')
-
-/*let tumblrs=require("./tumblrs.js");
-
- console.log(tumblrs.coucou)
- */
 let params = require("./params.json")
-latruite = null;
-minouland = null;
-debug = null;
+
 
 //##################################################################################
 //################################ DECLARATIONS ####################################
 //##################################################################################
 
-//TUMBLRS ARCHIVES
 
+//TUMBLRS ARCHIVES
 //hard
 let moule = "https://jano-limites.tumblr.com/archive/";
 let womenlover = "https://womenlover2014.tumblr.com/archive/"
@@ -123,11 +116,17 @@ let rousseHard = [
 ];
 
 
+//CHANNELS
+latruite = null;
+minouland = null;
+debug = null;
+
+//FEED
 let feed = require('feed-read');
-let hello_cmd = ["salut", "bonjour", "yo", "yop", "hey", "plop", "hi"];
 let RSSFEED_BM = "http://dites.bonjourmadame.fr/rss";
 
 
+let hello_cmd = ["salut", "bonjour", "yo", "yop", "hey", "plop", "hi"];
 let helpMsg = "Tiens, on demande mon aide ? Gaffe, tout est NSFW !\n" +
     "- !bm : affiche la dernière bm de la journée \n" +
     "- !ra: affiche une bombe aléatoire parmis tous les tumblr que nous compatriotes ont bien voulu me donner \n" +
@@ -220,10 +219,6 @@ function selectRandTumblr(tumblrList) {
 
 
 //##################################################################################
-//################################## REACTIONS #####################################
-//##################################################################################
-
-//##################################################################################
 //################################## CRON JOBS #####################################
 //##################################################################################
 let pauseMatin = new CronJob('00 00 10 * * 1-5', function () {
@@ -291,6 +286,9 @@ let cronJobs = [
     mangerMidi
 ]
 
+//##################################################################################
+//################################## REACTIONS #####################################
+//##################################################################################
 
 client.on('ready', () => {
 
