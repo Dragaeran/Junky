@@ -1,4 +1,15 @@
-# discord-bot-junky
-Simple bot to fap and go.
+# Junky
 
-You'll need a file named params.json, containing   {"token" : "your secret token" }
+A somewhat jerky bot, based on discord.js.
+
+
+# Prereqs
+
+You'll need a file named params.json, containing   
+
+{
+  "token": "your secret token",
+  "softCoreChannel" : "channel ID",
+  "hardCoreChannel" : "channel ID",
+  "debugID" : "channel ID"
+}

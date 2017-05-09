@@ -13,7 +13,24 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const CronJob = require('cron').CronJob;
 const request = require('request')
+const express = require('express')
+const server = express()
 let params = require("./params.json")
+
+//##################################################################################
+//################################### SERVER #######################################
+//##################################################################################
+
+server.get('/', function (req, res) {
+    res.send('Hey it\'s junky\'s page!')
+});
+
+server.listen(3000, function () {
+    console.log('Junky has it\s server listening on port 3000!')
+});
+
+
+
 
 
 //##################################################################################
@@ -92,16 +109,16 @@ let cosplayList = [
     cosplayBooties,
     cosplayHot,
     insanelyHotCosplay
-]
+];
 
-let addict = [pascalAddict]
+let addict = [pascalAddict];
 
-let rousse = [pascalRousse]
+let rousse = [pascalRousse];
 
 let boule = [
     amazingAss,
     backDimples,
-    sexyButt]
+    sexyButt];
 
 let beach = [pascalBeach];
 
@@ -117,8 +134,8 @@ let rousseHard = [
 
 
 //CHANNELS
-latruite = null;
-minouland = null;
+softCoreChannel = null;
+hardCoreChannel = null;
 debug = null;
 
 //FEED
@@ -130,7 +147,7 @@ let hello_cmd = ["salut", "bonjour", "yo", "yop", "hey", "plop", "hi"];
 let helpMsg = "Tiens, on demande mon aide ? Gaffe, tout est NSFW !\n" +
     "- !bm : affiche la dernière bm de la journée \n" +
     "- !ra: affiche une bombe aléatoire parmis tous les tumblr que nous compatriotes ont bien voulu me donner \n" +
-    "- !rh : affiche une fracture de la rétine dans minouland. T'es prévenu, 'y a d'la pêche et de l'oignon ! \n" +
+    "- !rh : affiche une fracture de la rétine dans hardCoreChannel. T'es prévenu, 'y a d'la pêche et de l'oignon ! \n" +
     "- !rousse : Parce que l'Irlande c'est quand même un beau pays \n" +
     "- !addict : Je sais même pas ce que t'attends de ça mais pourquoi pas \n" +
     "- !boule : On veut de la bulle ? Du bon boulard des familles ? C'est ici ! \n" +
@@ -157,7 +174,7 @@ function sendMadame(random, channelID) {
 
 
 //connect to bm archives and suck all the images in a given page, then returns a random one.
-function sendRandomTumblrPic(tumblrList, channelID) {
+function sendRandomTumblrPic(tumblrList, channel) {
 
     let tumblr = selectRandTumblr(tumblrList);
 
@@ -188,12 +205,12 @@ function sendRandomTumblrPic(tumblrList, channelID) {
             }
 
             let tumblrName = tumblr.replace("/archive/", "");
-            channelID.sendMessage("Vu sur " + tumblrName + ":");
-            channelID.sendMessage(hackedImage);
+            channel.sendMessage("Vu sur " + tumblrName + ":");
+            channel.sendMessage(hackedImage);
 
         } catch (e) {
             console.log("Erreur. Il n'y a pas d'image à cette date :( Cherchons ailleurs...");
-            sendRandomTumblrPic(tumblrList, channelID)
+            sendRandomTumblrPic(tumblrList, channel)
         }
 
     })
@@ -222,34 +239,34 @@ function selectRandTumblr(tumblrList) {
 //################################## CRON JOBS #####################################
 //##################################################################################
 let pauseMatin = new CronJob('00 00 10 * * 1-5', function () {
-    latruite.sendMessage("Pause");
+    softCoreChannel.sendMessage("Pause");
 }, null, false, 'Europe/Paris');
 
 
 let prepauseMatin = new CronJob('00 45 9 * * 1-5', function () {
-    latruite.sendMessage("Prépause");
+    softCoreChannel.sendMessage("Prépause");
 }, null, false, 'Europe/Paris');
 
 
 //MIDI
 let mangerMidi = new CronJob('00 00 12 * * 1-5', function () {
-    latruite.sendMessage("On mange où ?");
+    softCoreChannel.sendMessage("On mange où ?");
 }, null, false, 'Europe/Paris');
 
 
 let mangerManger = new CronJob('00 15 12 * * 1-5', function () {
-    latruite.sendMessage("MangerMangerManger");
+    softCoreChannel.sendMessage("MangerMangerManger");
 }, null, false, 'Europe/Paris');
 
 
 //SOIR
 let pauseSoir = new CronJob('00 30 15 * * 1-5', function () {
-    latruite.sendMessage("Pause");
+    softCoreChannel.sendMessage("Pause");
 }, null, false, 'Europe/Paris');
 
 
 let prepauseSoir = new CronJob('00 15 15 * * 1-5', function () {
-    latruite.sendMessage("Prépause");
+    softCoreChannel.sendMessage("Prépause");
 }, null, false, 'Europe/Paris');
 
 //############# MADAMES ################
@@ -257,20 +274,20 @@ let prepauseSoir = new CronJob('00 15 15 * * 1-5', function () {
 //LAST BM
 
 let matinBm = new CronJob('00 30 11 * * 1-5', function () {
-    latruite.sendMessage("C'est l'heure de dire Bonjour Madame !");
-    sendMadame(false, latruite);
+    softCoreChannel.sendMessage("C'est l'heure de dire Bonjour Madame !");
+    sendMadame(false, softCoreChannel);
 }, null, false, 'Europe/Paris');
 
 
 let bonjourBm = new CronJob('00 30 8 * * 1-5', function () {
-    latruite.sendMessage("Salut les blaireaux !");
-    sendRandomTumblrPic(softTumblrList, latruite);
+    softCoreChannel.sendMessage("Salut les blaireaux !");
+    sendRandomTumblrPic(softTumblrList, softCoreChannel);
 }, null, false, 'Europe/Paris');
 
 
 let soirBm = new CronJob('00 20 17 * * 1-5', function () {
-    latruite.sendMessage("Et on dit Bonsoir Madame avant de se casser !");
-    sendRandomTumblrPic(softTumblrList, latruite);
+    softCoreChannel.sendMessage("Et on dit Bonsoir Madame avant de se casser !");
+    sendRandomTumblrPic(softTumblrList, softCoreChannel);
 }, null, false, 'Europe/Paris');
 
 
@@ -294,8 +311,8 @@ client.on('ready', () => {
 
     console.log('Connected !');
 
-    //minouland = client.channels.get(params.minoulandID);
-    latruite = client.channels.get(params.latruiteID);
+    //hardCoreChannel = client.channels.get(params.minoulandID);
+    softCoreChannel = client.channels.get(params.softCoreChannel);
     debug = client.channels.get(params.debugID);
 
     console.log("Starting cron tasks...");
@@ -303,7 +320,7 @@ client.on('ready', () => {
     debug.sendMessage("Junky started and ready to slap some asses.");
 
     for (let job in cronJobs) {
-        cronJobs[job].start(latruite);
+        cronJobs[job].start(softCoreChannel);
     }
 
     console.log("Tasks successfully started.")
@@ -323,8 +340,8 @@ client.on("reconnecting", function () {
 })
 
 client.on("message", (message) => {
-    minouland = client.channels.get(params.minoulandID);
-    latruite = client.channels.get(params.latruiteID);
+    hardCoreChannel = client.channels.get(params.hardCoreChannel);
+    softCoreChannel = client.channels.get(params.softCoreChannel);
     debug = client.channels.get(params.debugID);
 
     let msg_content = message.content.toLowerCase();
@@ -337,7 +354,7 @@ client.on("message", (message) => {
 
         case '!rh' :
             message.delete()
-            sendRandomTumblrPic(hardTumblrList, minouland);
+            sendRandomTumblrPic(hardTumblrList, hardCoreChannel);
             break;
 
         case contains(hello_cmd, msg_content):
@@ -370,7 +387,7 @@ client.on("message", (message) => {
 
         case '!rousse hard' :
             message.delete()
-            sendRandomTumblrPic(rousseHard, minouland)
+            sendRandomTumblrPic(rousseHard, hardCoreChannel)
             break;
 
         case '!cosplay' :
