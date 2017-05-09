@@ -30,9 +30,6 @@ server.listen(3000, function () {
 });
 
 
-
-
-
 //##################################################################################
 //################################ DECLARATIONS ####################################
 //##################################################################################
@@ -47,6 +44,7 @@ let perfectredhead = "http://perfectredheads.tumblr.com/archive/"
 let stunningred = "https://stunningredheads.tumblr.com/archive/"
 let redHard = "http://cibucknel.tumblr.com/archive/"
 let ginger = "http://ginger-redhead-and-hot.tumblr.com/archive/"
+let gifAmazing = "http://amazingandcutegirls.tumblr.com/archive/"
 
 
 //soft
@@ -66,6 +64,9 @@ let backDimples = "http://sexyhotbackdimples.tumblr.com/archive/";
 let sexyWomen = "http://everythingifindsexyaboutwomen.tumblr.com/archive/"
 let sexyButt = "http://sexyhotbutts.tumblr.com/archive/"
 let amazingAss = "http://justamazingass.tumblr.com/archive/"
+let gifKingsDirty = "http://kingsdirtymind.tumblr.com/archive/"
+let gifBestBoobs = "http://bestboobgif.tumblr.com/archive/"
+
 
 //cosplay
 let sexiestCosplay = "http://nerdynakedgirls.tumblr.com/archive/"
@@ -90,7 +91,9 @@ let softTumblrList = [
     backDimples,
     sexyWomen,
     sexyButt,
-    amazingAss
+    amazingAss,
+    gifKingsDirty,
+    gifBestBoobs
 ];
 
 
@@ -101,7 +104,8 @@ let hardTumblrList = [
     perfectredhead,
     stunningred,
     redHard,
-    ginger
+    ginger,
+    gifAmazing
 ];
 
 let cosplayList = [
@@ -132,10 +136,19 @@ let rousseHard = [
     ginger
 ];
 
+let gifHard = [
+    gifAmazing
+];
+
+let gifSoft = [
+    gifKingsDirty,
+    gifBestBoobs
+]
 
 //CHANNELS
 softCoreChannel = null;
 hardCoreChannel = null;
+veryHardCoreChannel = null;
 debug = null;
 
 //FEED
@@ -147,11 +160,13 @@ let hello_cmd = ["salut", "bonjour", "yo", "yop", "hey", "plop", "hi"];
 let helpMsg = "Tiens, on demande mon aide ? Gaffe, tout est NSFW !\n" +
     "- !bm : affiche la dernière bm de la journée \n" +
     "- !ra: affiche une bombe aléatoire parmis tous les tumblr que nous compatriotes ont bien voulu me donner \n" +
-    "- !rh : affiche une fracture de la rétine dans hardCoreChannel. T'es prévenu, 'y a d'la pêche et de l'oignon ! \n" +
+    "- !rh : affiche une fracture de la rétine dans minouland. T'es prévenu, 'y a d'la pêche et de l'oignon ! \n" +
     "- !rousse : Parce que l'Irlande c'est quand même un beau pays \n" +
     "- !addict : Je sais même pas ce que t'attends de ça mais pourquoi pas \n" +
     "- !boule : On veut de la bulle ? Du bon boulard des familles ? C'est ici ! \n" +
     "- !yoga : De l'amour des formes géométriques et du feng-shui \n" +
+    "- !gh : Du hard, et animé en plus ! Bon, c'est hard donc => minouland\n" +
+    "- !gs : Du soft, et animé en plus ! Disponible partout pour le bonheur des yeux !\n" +
     "- !beach : Ahh, l'air iodé de la mer, le doux vent estival qui donne la chair de poule... \n";
 
 
@@ -341,6 +356,7 @@ client.on("reconnecting", function () {
 
 client.on("message", (message) => {
     hardCoreChannel = client.channels.get(params.hardCoreChannel);
+    veryHardCoreChannel = client.channels.get(params.veryHardCoreChannel);
     softCoreChannel = client.channels.get(params.softCoreChannel);
     debug = client.channels.get(params.debugID);
 
@@ -355,6 +371,16 @@ client.on("message", (message) => {
         case '!rh' :
             message.delete()
             sendRandomTumblrPic(hardTumblrList, hardCoreChannel);
+            break;
+
+        case '!gs' :
+            message.delete()
+            sendRandomTumblrPic(gifSoft, message.channel);
+            break;
+
+        case '!gh' :
+            message.delete()
+            sendRandomTumblrPic(gifHard, veryHardCoreChannel);
             break;
 
         case contains(hello_cmd, msg_content):
