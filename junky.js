@@ -38,8 +38,8 @@ server.listen(3000, function () {
 //TUMBLRS ARCHIVES
 //hard
 let moule = "https://jano-limites.tumblr.com/archive/";
-let womenlover = "https://womenlover2014.tumblr.com/archive/"
-let blackknees = "http://blacknees.tumblr.com/archive/"
+let womenlover = "https://womenlover2014.tumblr.com/archive/";
+let blackknees = "http://blacknees.tumblr.com/archive/";
 let perfectredhead = "http://perfectredheads.tumblr.com/archive/"
 let stunningred = "https://stunningredheads.tumblr.com/archive/"
 let redHard = "http://cibucknel.tumblr.com/archive/"
@@ -143,7 +143,7 @@ let gifHard = [
 let gifSoft = [
     gifKingsDirty,
     gifBestBoobs
-]
+];
 
 //CHANNELS
 softCoreChannel = null;
@@ -177,7 +177,7 @@ let helpMsg = "Tiens, on demande mon aide ? Gaffe, tout est NSFW !\n" +
 //returns a random (or not) bm from the last ones. If false is given it will return the very last one bm.
 function sendMadame(random, channelID) {
     feed(RSSFEED_BM, function (err, articles) {
-        index = 0;
+        let index = 0;
         if (random) {
             index = Math.floor(Math.random() * (articles.length - 1));
         }
@@ -194,40 +194,35 @@ function sendRandomTumblrPic(tumblrList, channel) {
     let tumblr = selectRandTumblr(tumblrList);
 
     let date = new Date();
-    monthLimit = 12;
-    randYear = Math.floor((Math.random() * 2) + 1) + 2014;
+    let monthLimit = 12;
+    let randYear = Math.floor((Math.random() * 2) + 1) + 2014;
 
-    randMonth = Math.floor((Math.random() * monthLimit) + 1);
+    let randMonth = Math.floor((Math.random() * monthLimit) + 1);
 
     request({uri: tumblr + randYear + "/" + randMonth}, function (err, response, body) {
         if (err && response.statusCode !== 200)
             console.log('Request error.');
         let $ = cheerio.load(body);
-
-        $body = $('body');
-        $images = $body.find('.has_imageurl');
+        let $body = $('body');
+        let $images = $body.find('.has_imageurl');
 
         let randIndex = Math.floor((Math.random() * $images.length) + 1);
         try {
-            selectedImage = $images[randIndex].attribs['data-imageurl'];
-
+            let selectedImage = $images[randIndex].attribs['data-imageurl'];
             console.log("Image correspondante au %d, %s", randIndex, selectedImage);
 
-            try {
-                hackedImage = selectedImage.replace("250.", "500.");
-            } catch (e) {
-                console.log("Erreur dans le changement de taille :( C'est peut-être un gif ?")
-            }
+            if (selectedImage.search('.jpg') || selectedImage.search('.png'))
+                selectedImage = selectedImage.replace("250.", "500.");
+
 
             let tumblrName = tumblr.replace("/archive/", "");
             channel.sendMessage("Vu sur " + tumblrName + ":");
-            channel.sendMessage(hackedImage);
+            channel.sendMessage(selectedImage);
 
         } catch (e) {
             console.log("Erreur. Il n'y a pas d'image à cette date :( Cherchons ailleurs...");
             sendRandomTumblrPic(tumblrList, channel)
         }
-
     })
 }
 
@@ -253,6 +248,9 @@ function selectRandTumblr(tumblrList) {
 //##################################################################################
 //################################## CRON JOBS #####################################
 //##################################################################################
+
+
+//MATIN
 let pauseMatin = new CronJob('00 00 10 * * 1-5', function () {
     softCoreChannel.sendMessage("Pause");
 }, null, false, 'Europe/Paris');
@@ -287,7 +285,6 @@ let prepauseSoir = new CronJob('00 15 15 * * 1-5', function () {
 //############# MADAMES ################
 
 //LAST BM
-
 let matinBm = new CronJob('00 30 11 * * 1-5', function () {
     softCoreChannel.sendMessage("C'est l'heure de dire Bonjour Madame !");
     sendMadame(false, softCoreChannel);
@@ -316,28 +313,25 @@ let cronJobs = [
     prepauseSoir,
     mangerManger,
     mangerMidi
-]
+];
 
 //##################################################################################
 //################################## REACTIONS #####################################
 //##################################################################################
 
 client.on('ready', () => {
-
     console.log('Connected !');
-
-    //hardCoreChannel = client.channels.get(params.minoulandID);
-    softCoreChannel = client.channels.get(params.softCoreChannel);
-    debug = client.channels.get(params.debugID);
-
-    console.log("Starting cron tasks...");
+    let softCoreChannel = client.channels.get(params.softCoreChannel);
+    let debug = client.channels.get(params.debugID);
 
     debug.sendMessage("Junky started and ready to slap some asses.");
 
+
+    //starting jobs
+    console.log("Starting cron tasks...");
     for (let job in cronJobs) {
         cronJobs[job].start(softCoreChannel);
     }
-
     console.log("Tasks successfully started.")
 });
 
@@ -355,12 +349,13 @@ client.on("reconnecting", function () {
 })
 
 client.on("message", (message) => {
-    hardCoreChannel = client.channels.get(params.hardCoreChannel);
-    veryHardCoreChannel = client.channels.get(params.veryHardCoreChannel);
-    softCoreChannel = client.channels.get(params.softCoreChannel);
-    debug = client.channels.get(params.debugID);
+    let hardCoreChannel = client.channels.get(params.hardCoreChannel);
+    let veryHardCoreChannel = client.channels.get(params.veryHardCoreChannel);
+    let softCoreChannel = client.channels.get(params.softCoreChannel);
+    let debug = client.channels.get(params.debugID);
 
     let msg_content = message.content.toLowerCase();
+
     switch (msg_content) {
 
         case '!ra' :
@@ -369,17 +364,17 @@ client.on("message", (message) => {
             break;
 
         case '!rh' :
-            message.delete()
+            message.delete();
             sendRandomTumblrPic(hardTumblrList, hardCoreChannel);
             break;
 
         case '!gs' :
-            message.delete()
+            message.delete();
             sendRandomTumblrPic(gifSoft, message.channel);
             break;
 
         case '!gh' :
-            message.delete()
+            message.delete();
             sendRandomTumblrPic(gifHard, veryHardCoreChannel);
             break;
 
@@ -388,12 +383,12 @@ client.on("message", (message) => {
             break;
 
         case "!help":
-            message.delete()
+            message.delete();
             message.channel.sendMessage(helpMsg);
             break;
 
         case '!bm' :
-            message.delete()
+            message.delete();
             sendMadame(false, message.channel);
             break;
 
@@ -402,40 +397,38 @@ client.on("message", (message) => {
             break;
 
         case '!rousse' :
-            message.delete()
-            sendRandomTumblrPic(rousse, message.channel)
+            message.delete();
+            sendRandomTumblrPic(rousse, message.channel);
             break;
 
         case '!addict' :
-            message.delete()
-            sendRandomTumblrPic(addict, message.channel)
+            message.delete();
+            sendRandomTumblrPic(addict, message.channel);
             break;
 
         case '!rousse hard' :
-            message.delete()
-            sendRandomTumblrPic(rousseHard, hardCoreChannel)
+            message.delete();
+            sendRandomTumblrPic(rousseHard, hardCoreChannel);
             break;
 
         case '!cosplay' :
-            message.delete()
-            sendRandomTumblrPic(cosplayList, message.channel)
+            message.delete();
+            sendRandomTumblrPic(cosplayList, message.channel);
             break;
 
         case '!beach' :
-            message.delete()
-
-            sendRandomTumblrPic(beach, message.channel)
+            message.delete();
+            sendRandomTumblrPic(beach, message.channel);
             break;
 
         case '!yoga' :
-            message.delete()
-
-            sendRandomTumblrPic(yoga, message.channel)
+            message.delete();
+            sendRandomTumblrPic(yoga, message.channel);
             break;
 
         case '!boule' :
-            message.delete()
-            sendRandomTumblrPic(boule, message.channel)
+            message.delete();
+            sendRandomTumblrPic(boule, message.channel);
             break;
 
         default:
