@@ -12,10 +12,10 @@ const cheerio = require("cheerio");
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const CronJob = require('cron').CronJob;
-const request = require('request')
-const express = require('express')
-const server = express()
-let params = require("./params.json")
+const request = require('request');
+const express = require('express');
+const server = express();
+let params = require("./params.json");
 
 //##################################################################################
 //################################### SERVER #######################################
@@ -40,39 +40,44 @@ server.listen(3000, function () {
 let moule = "https://jano-limites.tumblr.com/archive/";
 let womenlover = "https://womenlover2014.tumblr.com/archive/";
 let blackknees = "http://blacknees.tumblr.com/archive/";
-let perfectredhead = "http://perfectredheads.tumblr.com/archive/"
-let stunningred = "https://stunningredheads.tumblr.com/archive/"
-let redHard = "http://cibucknel.tumblr.com/archive/"
-let ginger = "http://ginger-redhead-and-hot.tumblr.com/archive/"
-let gifAmazing = "http://amazingandcutegirls.tumblr.com/archive/"
+let perfectredhead = "http://perfectredheads.tumblr.com/archive/";
+let stunningred = "https://stunningredheads.tumblr.com/archive/";
+let redHard = "http://cibucknel.tumblr.com/archive/";
+let ginger = "http://ginger-redhead-and-hot.tumblr.com/archive/";
+let gifAmazing = "http://amazingandcutegirls.tumblr.com/archive/";
+let anjelicaebbi = "http://anjelicaebbi.tumblr.com/archive/";
+let anjelicakrystal = "http://anjelicakrystal.tumblr.com/archive/";
+let krystalboydrocks = "https://krystalboydrocks.tumblr.com/archive/";
+let teenangelica = "http://teen-angelica.tumblr.com/archive/";
+let lovekrystalboyd = "https://lovekrystalboyd.tumblr.com/archive/";
+let gozadorkrystalboyd = "http://gozador-krystalboyd.tumblr.com/archive/";
 
 
 //soft
 let bm = "http://dites.bonjourmadame.fr/archive/";
 let babesinbed = "http://babes-in-bed.tumblr.com/archive/";
-let pascalRousse = "http://redheadsexygirls.tumblr.com/archive/"
-let pascalAddict = "http://veracious-venom.tumblr.com/archive/"
-let pascalRussian = "https://russian--beauty.tumblr.com/archive/"
-let pascalYoga = "http://sexyhottonedbabes.tumblr.com/archive/"
-let pascalAsiat = "http://hot-asian-beauties.tumblr.com/archive/"
-let pascalTatoo = "https://tattoogirls66.tumblr.com/archive/"
-let pascalBeach = "http://69bk.tumblr.com/archive/"
-let pascalLegs = "http://trautmans-legs.tumblr.com/archive/"
-let pascalBabe = "http://babes-in-bed.tumblr.com/archive/"
-let backside = "https://thebeautifulbackside.tumblr.com/archive/"
+let pascalRousse = "http://redheadsexygirls.tumblr.com/archive/";
+let pascalAddict = "http://veracious-venom.tumblr.com/archive/";
+let pascalRussian = "https://russian--beauty.tumblr.com/archive/";
+let pascalYoga = "http://sexyhottonedbabes.tumblr.com/archive/";
+let pascalAsiat = "http://hot-asian-beauties.tumblr.com/archive/";
+let pascalTatoo = "https://tattoogirls66.tumblr.com/archive/";
+let pascalBeach = "http://69bk.tumblr.com/archive/";
+let pascalLegs = "http://trautmans-legs.tumblr.com/archive/";
+let pascalBabe = "http://babes-in-bed.tumblr.com/archive/";
+let backside = "https://thebeautifulbackside.tumblr.com/archive/";
 let backDimples = "http://sexyhotbackdimples.tumblr.com/archive/";
-let sexyWomen = "http://everythingifindsexyaboutwomen.tumblr.com/archive/"
-let sexyButt = "http://sexyhotbutts.tumblr.com/archive/"
-let amazingAss = "http://justamazingass.tumblr.com/archive/"
-let gifKingsDirty = "http://kingsdirtymind.tumblr.com/archive/"
-let gifBestBoobs = "http://bestboobgif.tumblr.com/archive/"
+let sexyWomen = "http://everythingifindsexyaboutwomen.tumblr.com/archive/";
+let sexyButt = "http://sexyhotbutts.tumblr.com/archive/";
+let amazingAss = "http://justamazingass.tumblr.com/archive/";
+let gifKingsDirty = "http://kingsdirtymind.tumblr.com/archive/";
+let gifBestBoobs = "http://bestboobgif.tumblr.com/archive/";
 
 
 //cosplay
-let sexiestCosplay = "http://nerdynakedgirls.tumblr.com/archive/"
-let cosplayBooties = "http://cosplay-booties.tumblr.com/archive/"
-let cosplayHot = "https://cosplayhot22.tumblr.com/archive/"
-let insanelyHotCosplay = "https://cosplayhot22.tumblr.com/archive/"
+let sexiestCosplay = "http://nerdynakedgirls.tumblr.com/archive/";
+let cosplayBooties = "http://cosplay-booties.tumblr.com/archive/";
+let cosplayHot = "https://cosplayhot22.tumblr.com/archive/";
 
 //#################################### ARRAYS ########################################
 let softTumblrList = [
@@ -96,6 +101,14 @@ let softTumblrList = [
     gifBestBoobs
 ];
 
+let angie = [
+    anjelicaebbi,
+    anjelicakrystal,
+    krystalboydrocks,
+    teenangelica,
+    lovekrystalboyd,
+    gozadorkrystalboyd
+];
 
 let hardTumblrList = [
     moule,
@@ -111,8 +124,7 @@ let hardTumblrList = [
 let cosplayList = [
     sexiestCosplay,
     cosplayBooties,
-    cosplayHot,
-    insanelyHotCosplay
+    cosplayHot
 ];
 
 let addict = [pascalAddict];
@@ -136,6 +148,7 @@ let rousseHard = [
     ginger
 ];
 
+
 let gifHard = [
     gifAmazing
 ];
@@ -144,6 +157,8 @@ let gifSoft = [
     gifKingsDirty,
     gifBestBoobs
 ];
+
+
 
 //CHANNELS
 softCoreChannel = null;
@@ -167,7 +182,8 @@ let helpMsg = "Tiens, on demande mon aide ? Gaffe, tout est NSFW !\n" +
     "- !yoga : De l'amour des formes géométriques et du feng-shui \n" +
     "- !gh : Du hard, et animé en plus ! Bon, c'est hard donc => minouland\n" +
     "- !gs : Du soft, et animé en plus ! Disponible partout pour le bonheur des yeux !\n" +
-    "- !beach : Ahh, l'air iodé de la mer, le doux vent estival qui donne la chair de poule... \n";
+    "- !beach : Ahh, l'air iodé de la mer, le doux vent estival qui donne la chair de poule... \n" +
+    "- !angie : Quel amoureux, ce @LamastiShots ! <3 \n";
 
 
 //##################################################################################
@@ -324,15 +340,16 @@ client.on('ready', () => {
     let softCoreChannel = client.channels.get(params.softCoreChannel);
     let debug = client.channels.get(params.debugID);
 
-    debug.sendMessage("Junky started and ready to slap some asses.");
+    debug.sendMessage("Junky is back and ready to roll.");
 
 
     //starting jobs
+/*
     console.log("Starting cron tasks...");
     for (let job in cronJobs) {
         cronJobs[job].start(softCoreChannel);
     }
-    console.log("Tasks successfully started.")
+    console.log("Tasks successfully started.")*/
 });
 
 
@@ -429,6 +446,11 @@ client.on("message", (message) => {
         case '!boule' :
             message.delete();
             sendRandomTumblrPic(boule, message.channel);
+            break;
+
+        case '!angie' :
+            message.delete();
+            sendRandomTumblrPic(angie, message.channel);
             break;
 
         default:

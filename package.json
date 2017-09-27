@@ -1,8 +1,8 @@
 {
-  "name": "discord-bot",
-  "version": "1.0.0",
+  "name": "Junky",
+  "version": "2.0.2",
   "description": "Small jerky bot",
-  "main": "discord-bot.js",
+  "main": "junky.js",
   "dependencies": {
     "cheerio": "^0.22.0",
     "cron": "^1.2.1",
